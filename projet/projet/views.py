@@ -5,7 +5,6 @@ import warnings
 import itertools
 import matplotlib.pyplot as plt
 import seaborn
-
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
@@ -16,9 +15,8 @@ from sklearn.model_selection import cross_val_score
 from sklearn import metrics as metrics
 
 def index(request):
-    train = pandas.read_csv("C:\\Users\\PAYDUNYA\\Documents\\projet_ia\\projet\\projet\\Train_data.csv")
-    test = pandas.read_csv("C:\\Users\\PAYDUNYA\\Documents\\projet_ia\\projet\\projet\\Test_data.csv")
-    print(train.head())
+    test = pandas.read_csv("https://keitaicp.s3.us-east-2.amazonaws.com/Test_data.csv")
+    train = pandas.read_csv("https://keitaicp.s3.us-east-2.amazonaws.com/Train_data.csv")
 
     print("Training data has {} rows & {} columns".format(train.shape[0], train.shape[1]))
 
@@ -33,7 +31,7 @@ def index(request):
     figure, axis = plt.subplots()
     axis.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
     axis.axis('equal')
-    #plt.show()
+    plt.show()
     print(train['num_outbound_cmds'].value_counts())
     print(test['num_outbound_cmds'].value_counts())
 
@@ -81,14 +79,14 @@ def index(request):
     rfc = RandomForestClassifier()
 
     rfe = RFE(rfc, n_features_to_select=10)
-    rfe = rfe.fit(train_x, train_y)
+    # rfe = rfe.fit(train_x, train_y)
 
-    feature_map = [(i, v) for i, v in itertools.zip_longest(rfe.get_support(), train_x.columns)]
-    selected_features = [v for i, v in feature_map if i == True]
-
-    print(selected_features)
-
-    seaborn.heatmap(train_x[selected_features].corr(), annot=True, fmt='.1g')
+    # feature_map = [(i, v) for i, v in itertools.zip_longest(rfe.get_support(), train_x.columns)]
+    # selected_features = [v for i, v in feature_map if i == True]
+    #
+    # print(selected_features)
+    #
+    # seaborn.heatmap(train_x[selected_features].corr(), annot=True, fmt='.1g')
     X_train, X_test, Y_train, Y_test = train_test_split(train_x, train_y, train_size=0.60, random_state=2)
     model = KNeighborsClassifier(n_jobs=-1)
     model.fit(X_train, Y_train);
@@ -125,8 +123,4 @@ def index(request):
 
     plt.show()
 
-    return HttpResponse(train.describe())
-   # warnings.filterwarnings("ignore")
-    #result = open("Train_data.csv", "r")
-    #train = pandas.read_csv("Train_data.csv")
-   #with open('persons.csv', 'r')
+    return HttpResponse(prediction)
